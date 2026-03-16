@@ -15,12 +15,17 @@ import re
 BASE_URL = "https://www.ecfr.gov/api"
 TIMEOUT = 30.0
 
-# Add near constants
-LOG_DIR = Path("test_outputs")
-RUN_TS = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-# Ensure directory exists
+# Create an output directory for test artifacts
+LOG_DIR = Path("../test_outputs/api_tests")
+# Ensure the output directory exists
 LOG_DIR.mkdir(parents=True, exist_ok=True)
+# Create a timestamp for this run
+RUN_TS = datetime.now().strftime("%Y%m%d_%H%M%S")
+# Create a run-specific directory
+RUN_DIR = LOG_DIR / RUN_TS
+# Ensure the run directory exists
+RUN_DIR.mkdir(parents=True, exist_ok=True)
+
 
 # Test configuration
 TEST_TITLE = 1
@@ -68,11 +73,11 @@ async def make_api_request(endpoint: str, params: Optional[Dict[str, Any]] = Non
 
             # Choose file extension for the raw body
             if endpoint.endswith(".xml"):
-                body_path = LOG_DIR / f"{base_name}.xml"
-                meta_path = LOG_DIR / f"{base_name}.meta.txt"
+                body_path = RUN_DIR / f"{base_name}.xml"
+                meta_path = RUN_DIR / f"{base_name}.meta.txt"
             else:
-                body_path = LOG_DIR / f"{base_name}.json"
-                meta_path = LOG_DIR / f"{base_name}.meta.txt"
+                body_path = RUN_DIR / f"{base_name}.json"
+                meta_path = RUN_DIR / f"{base_name}.meta.txt"
 
             # Write metadata describing the response
             meta_text = "\n".join([
