@@ -8,8 +8,7 @@ Features:
 - Call a specific tool with --call and --args; prints the full tool output.
 
 Argument contract:
-- Server tool schemas require a top-level "params" object.
-- The --args flag supplies the inner params payload; the client wraps it as {"params": <args>}.
+- Server tool schemas use flat top-level fields; --args keys must match tool parameter names directly.
 
 Examples:
 - python client.py --server server.py
@@ -73,9 +72,9 @@ async def _list_tools(session: ClientSession) -> Dict[str, Any]:
 
 
 async def _call_tool_raw(session: ClientSession, name: str, params_payload: Dict[str, Any]) -> Any:
-    # Wrap the inner params payload to match server input schema
-    arguments = {"params": params_payload}
-    # Call the tool with the expected argument envelope
+    # Pass args flat — server tool schemas use top-level fields, not a nested params wrapper
+    arguments = params_payload
+    # Call the tool with the flat argument dict
     result = await session.call_tool(name, arguments=arguments)
     # Return the raw tool result object
     return result
