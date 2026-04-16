@@ -1,0 +1,4 @@
+gradio[mcp]
+httpx
+mcp
+pydantic
