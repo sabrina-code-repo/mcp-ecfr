@@ -377,4 +377,4 @@ MCP endpoint: **`/gradio_api/mcp/sse`**
     gr.api(ecfr_compare_regulations, api_name="ecfr_compare_regulations")
 
 if __name__ == "__main__":
-    demo.launch(mcp_server=True)
+    demo.launch(mcp_server=True, server_name="0.0.0.0")
