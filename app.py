@@ -18,6 +18,7 @@ from src.server import (
     ecfr_get_regulation as _ecfr_get_regulation,
     ecfr_get_title_structure as _ecfr_get_title_structure,
     ecfr_compare_regulations as _ecfr_compare_regulations,
+    regulatory_index as _regulatory_index,
 )
 
 
@@ -59,6 +60,30 @@ def _to_opt_str_list(value: str) -> list[str] | None:
 
 
 # -- Wrapper functions --
+
+
+async def ecfr_regulatory_index() -> str:
+    """Get metadata and usage guide for the eCFR MCP tools. READ THIS FIRST.
+
+    Returns Uniform Guidance (2 CFR Part 200) metadata, latest amendment dates,
+    starter citations, grants-relevant agency slugs, and key rules for valid tool calls.
+
+    Key rules:
+    - Call ecfr_get_title_versions BEFORE ecfr_get_regulation to get a valid date.
+    - Use ecfr_search for topic/concept discovery.
+    - Always provide title= explicitly; part numbers are NOT unique across titles.
+    - Prefer section-level over part-level requests.
+
+    Tool call workflow:
+    - Topic question: ecfr_search -> ecfr_get_title_versions -> ecfr_get_regulation
+    - Citation lookup: ecfr_get_title_versions -> ecfr_get_regulation
+    - Change history: ecfr_get_title_versions -> ecfr_compare_regulations
+    - Browse structure: ecfr_get_title_structure
+
+    Returns:
+        JSON with regulatory index metadata, starter citations, and usage notes.
+    """
+    return await _regulatory_index()
 
 
 async def ecfr_list_titles(summary_only: str = "true") -> str:
@@ -342,6 +367,7 @@ Add this server as a connector in Claude or any MCP-compatible client.
 MCP endpoint: **`/gradio_api/mcp/sse`**
 """)
 
+    gr.api(ecfr_regulatory_index, api_name="ecfr_regulatory_index")
     gr.api(ecfr_list_titles, api_name="ecfr_list_titles")
     gr.api(ecfr_list_agencies, api_name="ecfr_list_agencies")
     gr.api(fn=ecfr_search, api_name="ecfr_search")
