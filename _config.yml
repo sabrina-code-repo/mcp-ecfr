@@ -1,0 +1,5 @@
+title: eCFR MCP Server
+description: Connect Claude to federal regulations via the eCFR MCP Server
+theme: jekyll-theme-cayman
+include:
+  - CONNECTING_TO_CLAUDE.pdf
